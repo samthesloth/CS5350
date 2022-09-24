@@ -115,7 +115,6 @@ def id3Recurse(data, parent, maxDepth):
 #Print tree by printing the label of parent and decision of each child
 def printTree(root):
   if(root is not None):
-    #print(root.label)
     if root.leaf:
       print(root.label)
     for c in root.children:
@@ -131,7 +130,6 @@ def predict(root, instance):
 
   # If it's a leaf, must go with label
   if root.leaf == True:
-    print("leaf")
     return root.label
 
   # Get value at instance's attribute index
@@ -146,7 +144,6 @@ def predict(root, instance):
 
     # If matches, recursively go to that node
     if feature_value == child.decision:
-      print("here")
       return predict(child, instance)
   return None
 
