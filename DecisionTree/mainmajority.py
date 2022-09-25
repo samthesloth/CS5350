@@ -15,21 +15,21 @@ def sameLabels(data):
   a = data.to_numpy()
   return (a[0] == a).all()
 
-# Find the entropy of the given column
-def getEntropy(data, column):
+# Find the ME of the given column
+def getME(data, column):
   labels = data[data.keys()[-1]].unique()
   values = data[column].unique()
   final = 0
   for val in values:
-      entropy = 0
+      merror = []
       for lab in labels:
-          count = len(data[column][data[column]==val][data[data.keys()[-1]] ==lab])
+          count = len(data[column][data[column]==val][data[data.keys()[-1]]==lab])
           total = len(data[column][data[column]==val])
           fraction = count/total
           if(fraction > 0):
-            entropy += -fraction*np.log2(fraction)
+            merror.append(fraction)
       fullFrac = total/len(data)
-      final += -fullFrac*entropy
+      final += fullFrac*min(merror)
   return final
 
 # Get entropy of column. Quick and easy for total entropy
@@ -41,12 +41,11 @@ def getTotalEntropy(column):
 def findBestAttribute(data):
   entropies = []
 
-  totalE = getTotalEntropy(data.iloc[:, -1])
+  totalE = getME(data, data.keys()[-1])
   # Go through each column and get the entropy
   for column in data.keys()[:-1]:
-    entropies.append(totalE-getEntropy(data,column))
+    entropies.append(totalE-getME(data,column))
   
-
   # Return the index of the attribute with the lowest entropy
   return data.keys()[:-1][np.argmin(entropies)]
 
